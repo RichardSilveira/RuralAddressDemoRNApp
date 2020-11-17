@@ -33,6 +33,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+
 Amplify.configure(awsmobile);
 
 export default class Home extends React.Component {
@@ -65,10 +66,15 @@ export default class Home extends React.Component {
       method: 'GET',
       headers: {Authorization: AppConfig.getCityApiHeader},
     })
-      .then((response) => response.json())
+      .then((response) => {
+        const data = response.json();
+        console.log('### cities: ' + JSON.stringify(data));
+        return data;
+      })
       .then((e) => {
         let cities = [];
-        let data = JSON.parse(e.body);
+        let data = JSON.parse(e);
+        console.log('### cities [data]: ' + JSON.stringify(data));
         for (let i = 0; i < data.length; i++) {
           if (data[i].sigla) {
             cities.push(data[i]);
