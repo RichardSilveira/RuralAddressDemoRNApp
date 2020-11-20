@@ -8,7 +8,7 @@ import img2 from '../../assets/icons/vera.png';
 import awsmobile from '../../Utils/aws-exports';
 import {DataStore} from '@aws-amplify/datastore';
 import img3 from '../../assets/icons/03-ampa.png';
-import img4 from '../../assets/icons/03-ampa.png';
+import img4 from '../../assets/icons/04-acrimat.png';
 import img8 from '../../assets/icons/08-cipen.png';
 import img9 from '../../assets/icons/09-sicred.png';
 import img7 from '../../assets/icons/07-famato.png';
@@ -33,6 +33,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import {AsyncStorage} from '@aws-amplify/core';
 
 Amplify.configure(awsmobile);
 
@@ -58,30 +59,27 @@ export default class Home extends React.Component {
   };
 
   componentDidMount = async () => {
-    await DataStore.observe(RuralAddress).subscribe((msg) => {
+    const subscription = DataStore.observe(RuralAddress).subscribe((msg) => {
       let array = [...this.state.ruralAddresses, msg.element];
       this.setState({ruralAddresses: array});
     });
+
+    const updateCitites = (citiesAsJson) => {
+      let cities = JSON.parse(citiesAsJson);
+      this.setState({cities});
+    };
+
+    const citiesLocal = await AsyncStorage.getItem('cities');
+    updateCitites(citiesLocal);
+
     await fetch(AppConfig.getCityApi, {
       method: 'GET',
       headers: {Authorization: AppConfig.getCityApiHeader},
     })
-      .then((response) => {
-        const data = response.json();
-        console.log('### cities: ' + JSON.stringify(data));
-        return data;
-      })
-      .then((e) => {
-        let cities = [];
-        let data = JSON.parse(e);
-        console.log('### cities [data]: ' + JSON.stringify(data));
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].sigla) {
-            cities.push(data[i]);
-          }
-        }
-        this.setState({cities});
-      });
+      .then((response) => response.json())
+      .then(updateCitites);
+
+    return () => subscription.unsubscribe();
   };
 
   selectCity = (i) => {
@@ -178,7 +176,7 @@ export default class Home extends React.Component {
           <View style={styles.searchSection}>
             <Ico style={styles.searchIcon} name="ios-search" />
             <Picker
-              style={styles.input1}
+              style={styles.input1}pa
               placeholder="Buscar municipio"
               onValueChange={(e, i) => this.selectCity(i)}
               selectedValue={selectedCity && selectedCity.nome}>
@@ -199,7 +197,7 @@ export default class Home extends React.Component {
                 value={addressTxt}
                 placeholder="Buscar endereço rural"
                 style={selectedCity ? styles.input : styles.input2}
-                onChangeText={(e) => this.setState({addressTxt: e})}
+                onChangeText={(e) => this.setState({addressTxt: e, address: false})}
               />
             </View>
             <Text style={styles.serachBut} onPress={this.findAddress}>

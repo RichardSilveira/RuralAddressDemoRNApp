@@ -13,6 +13,7 @@ import Screen4 from './src/components/introScreen4';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActivityIndicator, View, AppRegistry, Image} from 'react-native';
+import AppConfig from './src/Utils/AppConfig';
 
 export default class App extends React.Component {
   state = {
@@ -31,13 +32,27 @@ export default class App extends React.Component {
       AsyncStorage.setItem('login', 'true');
       this.setState({loading: false});
     }
+
+    await fetch(AppConfig.getCityApi, {
+      method: 'GET',
+      headers: {Authorization: AppConfig.getCityApiHeader},
+    })
+      .then((response) => response.json())
+      .then((e) => {
+        AsyncStorage.setItem('cities', e);
+      });
   };
 
   View = ({item}) => {
-    if (item === '1') return <Screen1 />;
-    else if (item === '2') return <Screen2 />;
-    else if (item === '3') return <Screen3 />;
-    else if (item === '4') return <Screen4 next={this.next} />;
+    if (item === '1') {
+      return <Screen1 />;
+    } else if (item === '2') {
+      return <Screen2 />;
+    } else if (item === '3') {
+      return <Screen3 />;
+    } else if (item === '4') {
+      return <Screen4 next={this.next} />;
+    }
   };
 
   next = () => this.setState({startApp: !this.state.startApp});
@@ -45,8 +60,9 @@ export default class App extends React.Component {
   render() {
     const {startApp, keys, help, loading, login} = this.state;
     if (!loading) {
-      if (startApp) return <Home next={this.next} />;
-      else {
+      if (startApp) {
+        return <Home next={this.next} />;
+      } else {
         return (
           <View style={{flex: 1, backgroundColor: colors.lightGreen}}>
             {login && (
