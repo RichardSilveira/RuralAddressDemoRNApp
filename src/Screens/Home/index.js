@@ -155,6 +155,9 @@ export default class Home extends React.Component {
     Linking.openURL(content);
   };
 
+  onChangeSearchText = (search) =>
+    this.setState({addressTxt: search, address: false});
+
   render() {
     const {cities, images, address, addressTxt, selectedCity} = this.state;
     let ico = address ? styles.iconBlue : styles.icons;
@@ -176,7 +179,8 @@ export default class Home extends React.Component {
           <View style={styles.searchSection}>
             <Ico style={styles.searchIcon} name="ios-search" />
             <Picker
-              style={styles.input1}pa
+              style={styles.input1}
+              pa
               placeholder="Buscar municipio"
               onValueChange={(e, i) => this.selectCity(i)}
               selectedValue={selectedCity && selectedCity.nome}>
@@ -197,7 +201,7 @@ export default class Home extends React.Component {
                 value={addressTxt}
                 placeholder="Buscar endereço rural"
                 style={selectedCity ? styles.input : styles.input2}
-                onChangeText={(e) => this.setState({addressTxt: e, address: false})}
+                onChangeText={this.onChangeSearchText}
               />
             </View>
             <Text style={styles.serachBut} onPress={this.findAddress}>
