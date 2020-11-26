@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "device": "react-native run-android --deviceId=230d26211a027ece",
-        "android": "react-native run-android",
+        "android": "react-native run-android --deviceId=emulator-5554",
         "ios": "react-native run-ios",
         "start": "react-native start",
         "release-android": "cd android && gradlew assembleRelease",

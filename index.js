@@ -29,7 +29,7 @@ export default class App extends React.Component {
     if (logged !== null) {
       this.setState({loading: false, startApp: true, login: true});
     } else {
-      AsyncStorage.setItem('login', 'true');
+      await AsyncStorage.setItem('login', 'true');
       this.setState({loading: false});
     }
 

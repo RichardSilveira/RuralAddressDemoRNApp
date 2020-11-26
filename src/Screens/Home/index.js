@@ -209,13 +209,15 @@ export default class Home extends React.Component {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
+        <View
           style={styles.centerIcon}
-          activeOpacity={address ? 0.5 : 1}
-          onPress={address ? this.navigate : null}>
-          <Icon name="navigation" style={ico} />
-          <Text style={styles.bottomLable}>Inicar</Text>
-        </TouchableOpacity>
+          activeOpacity={address ? 0.5 : 1}>
+          <TouchableOpacity
+              onPress={address ? this.navigate : null}>
+            <Icon name="navigation" style={ico} />
+            <Text style={styles.bottomLable}>Inicar</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.centerIconRow}>
           <TouchableOpacity
             style={styles.IconBox}
@@ -260,13 +262,13 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: '#0081c7',
+    backgroundColor: '#ffffff',
     justifyContent: 'space-between',
   },
   headTxt: {
     padding: 20,
     paddingBottom: 10,
-    color: 'white',
+    color: '#0081c7',
     fontWeight: 'bold',
   },
   input: {
