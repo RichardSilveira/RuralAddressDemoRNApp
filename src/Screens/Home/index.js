@@ -262,7 +262,6 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: '#ffffff',
     justifyContent: 'space-between',
   },
   headTxt: {
