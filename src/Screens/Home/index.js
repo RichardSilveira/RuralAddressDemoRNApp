@@ -1,5 +1,6 @@
 import React from 'react';
 import Amplify from 'aws-amplify';
+import {remove} from 'diacritics';
 import {RuralAddress} from '../../models';
 import OsmAndHelper from '../../OsmAndHelper';
 import AppConfig from '../../Utils/AppConfig';
@@ -32,6 +33,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Keyboard
 } from 'react-native';
 import {AsyncStorage} from '@aws-amplify/core';
 
@@ -98,7 +100,9 @@ export default class Home extends React.Component {
           {cancelable: false},
         );
       } else {
-        const searchTerm = `MT_${selectedCity.sigla}_${addressTxt.toLowerCase()}`;
+
+        const searchTerm = `MT_${selectedCity.sigla}_${remove(addressTxt).toLowerCase().trimEnd()}`;
+
         const result = await DataStore.query(RuralAddress, (m) =>
           m.id('eq', searchTerm),
         );
@@ -110,6 +114,7 @@ export default class Home extends React.Component {
             {cancelable: false},
           );
         } else {
+          Keyboard.dismiss();
           this.setState({address: true, selectedRuralAddress: result[0]});
         }
       }
@@ -157,6 +162,8 @@ export default class Home extends React.Component {
 
   onChangeSearchText = (search) =>
     this.setState({addressTxt: search, address: false});
+
+
 
   render() {
     const {cities, images, address, addressTxt, selectedCity} = this.state;
