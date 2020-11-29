@@ -98,7 +98,7 @@ export default class Home extends React.Component {
           {cancelable: false},
         );
       } else {
-        const searchTerm = `MT_${selectedCity.sigla}_${addressTxt}`;
+        const searchTerm = `MT_${selectedCity.sigla}_${addressTxt.toLowerCase()}`;
         const result = await DataStore.query(RuralAddress, (m) =>
           m.id('eq', searchTerm),
         );
