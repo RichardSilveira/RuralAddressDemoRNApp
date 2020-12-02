@@ -55,7 +55,9 @@ export default class App extends React.Component {
     }
   };
 
-  next = () => this.setState({startApp: !this.state.startApp});
+  next = () => {
+    this.setState({startApp: !this.state.startApp, login: true});
+  };
 
   render() {
     const {startApp, keys, help, loading, login} = this.state;
