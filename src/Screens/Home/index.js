@@ -20,6 +20,8 @@ import img6 from '../../assets/icons/06-sindicatos.png';
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/FontAwesome5';
+import {AppInstalledChecker} from 'react-native-check-app-install';
+
 import {
   View,
   Text,
@@ -33,7 +35,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Keyboard
+  Keyboard,
 } from 'react-native';
 import {AsyncStorage} from '@aws-amplify/core';
 
@@ -100,8 +102,9 @@ export default class Home extends React.Component {
           {cancelable: false},
         );
       } else {
-
-        const searchTerm = `MT_${selectedCity.sigla}_${remove(addressTxt).toLowerCase().trimEnd()}`;
+        const searchTerm = `MT_${selectedCity.sigla}_${remove(addressTxt)
+          .toLowerCase()
+          .trimEnd()}`;
 
         const result = await DataStore.query(RuralAddress, (m) =>
           m.id('eq', searchTerm),
@@ -127,7 +130,43 @@ export default class Home extends React.Component {
   navigate = async () => {
     const {id, latitude, longitude} = this.state.selectedRuralAddress;
     if (Platform.OS === 'android') {
-      OsmAndHelper.navigate(null, 0, 0, id, +latitude, +longitude, 'car', true);
+      AppInstalledChecker.isAppInstalled('osmand').then((isInstalled) => {
+        if (isInstalled) {
+          OsmAndHelper.navigate(
+            null,
+            0,
+            0,
+            id,
+            +latitude,
+            +longitude,
+            'car',
+            true,
+          );
+        } else {
+          Alert.alert(
+            'Download OsmAnd',
+            'Please download OsmAnd app to complete your action',
+            [
+              {
+                text: 'Ok',
+                onPress: () =>
+                  Linking.openURL(
+                    'https://play.google.com/store/apps/details?id=net.osmand',
+                  ),
+              },
+              {
+                text: 'Download',
+                onPress: () =>
+                  Linking.openURL(
+                    'https://play.google.com/store/apps/details?id=net.osmand',
+                  ),
+              },
+              {text: 'Cancell', style: 'cancel'},
+            ],
+            {cancelable: false},
+          );
+        }
+      });
     }
     if (Platform.OS === 'ios') {
       const url = `osmandmaps://navigate?lat=${+latitude}&lon=${+longitude}&z=4&title=${id}&profile=car&force=true`;
@@ -162,8 +201,6 @@ export default class Home extends React.Component {
 
   onChangeSearchText = (search) =>
     this.setState({addressTxt: search, address: false});
-
-
 
   render() {
     const {cities, images, address, addressTxt, selectedCity} = this.state;
@@ -216,11 +253,9 @@ export default class Home extends React.Component {
             </Text>
           </View>
         </View>
-        <View
-          style={styles.centerIcon}
-          activeOpacity={address ? 0.5 : 1}>
-          <TouchableOpacity
-              onPress={address ? this.navigate : null}>
+        <View style={styles.centerIcon} activeOpacity={address ? 0.5 : 1}>
+          {/* <TouchableOpacity onPress={address ? this.navigate : null}> */}
+          <TouchableOpacity onPress={() => this.navigate()}>
             <Icon name="navigation" style={ico} />
             <Text style={styles.bottomLable}>Inicar</Text>
           </TouchableOpacity>
