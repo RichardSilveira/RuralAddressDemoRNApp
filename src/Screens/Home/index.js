@@ -15,7 +15,7 @@ import img9 from '../../assets/icons/09-sicred.png';
 import img7 from '../../assets/icons/07-famato.png';
 import Ico from 'react-native-vector-icons/Ionicons';
 import img5 from '../../assets/icons/05-aprosoja.png';
-import {Picker} from '@react-native-community/picker';
+import {Picker} from '@react-native-picker/picker';
 import img6 from '../../assets/icons/06-sindicatos.png';
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'react-native-vector-icons/MaterialIcons';
