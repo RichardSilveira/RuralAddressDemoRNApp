@@ -1,10 +1,12 @@
 {
-    "name": "OfflineFirstDemoApp",
+    "name": "Endereço Rural",
     "version": "0.0.1",
     "private": true,
     "scripts": {
         "device": "react-native run-android --deviceId=230d26211a027ece",
         "android": "react-native run-android ",
+        "android:release": "react-native run-android --variant=release",
+        "android:bundle": "cd android && gradlew bundleRelease",
         "ios": "react-native run-ios",
         "start": "react-native start",
         "release-android": "cd android && gradlew assembleRelease",
